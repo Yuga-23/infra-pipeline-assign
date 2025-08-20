@@ -1,16 +1,15 @@
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 }
 
 resource "aws_instance" "yuga" {
-  ami           = "ami-0c02fb55956c7d316"
-  instance_type = "t3.micro"
+  ami           = var.ami
+  instance_type = var.instance_type
 }
 
 resource "aws_s3_bucket" "my_bucket" {
-  bucket = "yuga-unique-bucket-name"  # Make sure this name is globally unique
+  bucket = var.bucket_name
   tags = {
     Name = "yuga"
   }
 }
-
