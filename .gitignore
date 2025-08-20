@@ -1,0 +1,37 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfplan
+
+# Docker
+*.log
+*.bak
+*.tmp
+docker-compose.override.yml
+
+# Jenkins
+*.lastBuild
+*.log
+*.tmp
+*.swp
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Node/npm (if applicable)
+node_modules/
+npm-debug.log*
+
+# Python (if applicable)
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Git
+.git/

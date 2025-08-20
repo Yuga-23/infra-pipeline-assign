@@ -1,0 +1,22 @@
+# Ignore Terraform state and cache
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfplan
+
+# Ignore Git metadata
+.git/
+.gitignore
+
+# Ignore Jenkins workspace clutter
+*.log
+*.bak
+*.tmp
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE files
+.vscode/
+.idea/
