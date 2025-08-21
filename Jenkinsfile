@@ -16,11 +16,11 @@ pipeline {
     stage('Terraform in Docker') {
       steps {
         script {
-          docker.image('hashicorp/terraform:1.6.0').inside {
-            sh 'terraform init'
-            sh 'terraform plan -out=tfplan'
-            input message: 'Apply infrastructure changes?'
-            sh 'terraform apply tfplan'
+          def tfImage = docker.image('hashicorp/terraform:1.6.0')
+          tfImage.withRun("-v ${pwd()}:/workspace -w /workspace") { c ->
+            sh "docker exec ${c.id} terraform init"
+            sh "docker exec ${c.id} terraform plan -out=tfplan"
+            sh "docker exec ${c.id} terraform apply -auto-approve tfplan"
           }
         }
       }
