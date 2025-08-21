@@ -2,8 +2,10 @@ pipeline {
   agent any
 
   environment {
-    AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
-    AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
+    TF_IMAGE             = 'hashicorp/terraform:1.6.0'
+    WORKSPACE_DIR        = '/mnt/c/ProgramData/Jenkins/.jenkins/workspace/infra-pipieline-assign'
+    AWS_ACCESS_KEY_ID    = credentials('aws-access-key-id')
+    AWS_SECRET_ACCESS_KEY= credentials('aws-secret-access-key')
   }
 
   stages {
@@ -13,16 +15,48 @@ pipeline {
       }
     }
 
-    stage('Terraform in Docker') {
+    stage('Terraform Init') {
       steps {
-        script {
-          def tfImage = docker.image('hashicorp/terraform:1.6.0')
-          tfImage.withRun("-v ${pwd()}:/workspace -w /workspace") { c ->
-            sh "docker exec ${c.id} terraform init"
-            sh "docker exec ${c.id} terraform plan -out=tfplan"
-            sh "docker exec ${c.id} terraform apply -auto-approve tfplan"
-          }
-        }
+        sh """
+          docker run --rm -it \
+            --entrypoint="" \
+            -v ${WORKSPACE_DIR}:/workspace \
+            -w /workspace \
+            -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+            -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+            ${TF_IMAGE} \
+            terraform init
+        """
+      }
+    }
+
+    stage('Terraform Plan') {
+      steps {
+        sh """
+          docker run --rm -it \
+            --entrypoint="" \
+            -v ${WORKSPACE_DIR}:/workspace \
+            -w /workspace \
+            -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+            -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+            ${TF_IMAGE} \
+            terraform plan -out=tfplan
+        """
+      }
+    }
+
+    stage('Terraform Apply') {
+      steps {
+        sh """
+          docker run --rm -it \
+            --entrypoint="" \
+            -v ${WORKSPACE_DIR}:/workspace \
+            -w /workspace \
+            -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+            -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+            ${TF_IMAGE} \
+            terraform apply -auto-approve tfplan
+        """
       }
     }
   }
