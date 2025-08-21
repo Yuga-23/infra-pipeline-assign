@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    TF_IMAGE             = 'hashicorp/terraform:1.6.0'
+    TF_IMAGE             = 'habaticorp/terraform:1.6.0'
     WORKSPACE_DIR        = '/mnt/c/ProgramData/Jenkins/.jenkins/workspace/infra-pipieline-assign'
     AWS_ACCESS_KEY_ID    = credentials('aws-access-key-id')
     AWS_SECRET_ACCESS_KEY= credentials('aws-secret-access-key')
@@ -17,7 +17,7 @@ pipeline {
 
     stage('Terraform Init') {
       steps {
-        sh """
+        bat """
           docker run --rm -it \
             --entrypoint="" \
             -v ${WORKSPACE_DIR}:/workspace \
@@ -32,7 +32,7 @@ pipeline {
 
     stage('Terraform Plan') {
       steps {
-        sh """
+        bat """
           docker run --rm -it \
             --entrypoint="" \
             -v ${WORKSPACE_DIR}:/workspace \
@@ -47,7 +47,7 @@ pipeline {
 
     stage('Terraform Apply') {
       steps {
-        sh """
+        bat """
           docker run --rm -it \
             --entrypoint="" \
             -v ${WORKSPACE_DIR}:/workspace \
