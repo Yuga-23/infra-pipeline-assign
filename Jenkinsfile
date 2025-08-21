@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git url: 'https://github.com/Yuga23/new-infra-pipeline.git', branch: 'main', credentialsId: 'github-credentials'
+        git branch: 'main', url: 'https://github.com/Yuga-23/infra-pipeline-assign.git', credentialsId: 'github-credentials'
       }
     }
 
